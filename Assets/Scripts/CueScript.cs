@@ -32,7 +32,7 @@ public class CueScript : MonoBehaviour
 
         if (Input.GetMouseButtonUp(0))
         {
-            ball.GetComponent<Rigidbody>().velocity = (ball.transform.position - ray.GetPoint(hit)) * 5;
+            ball.GetComponent<Rigidbody>().velocity = (ball.transform.position - ray.GetPoint(hit)) * 3;
         }
     }
 }
