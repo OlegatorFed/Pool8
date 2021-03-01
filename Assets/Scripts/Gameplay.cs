@@ -7,6 +7,7 @@ using UnityEngine;
 public class Gameplay : MonoBehaviour
 {
 
+    //private CueScript cue;
     private Ball[] balls;
     private Field field;
     private Logic logic;

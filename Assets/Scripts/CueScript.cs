@@ -18,11 +18,26 @@ public class CueScript : MonoBehaviour
     void Update()
     {
         float hit;
+        bool cueIsActive;
+
+
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
         Plane plane = new Plane(Vector3.up, ball.transform.position);
 
         lineRenderer.enabled = Input.GetMouseButton(0);
+        cueIsActive = Input.GetMouseButton(0);
+
+        if (cueIsActive)
+        {
+            Time.timeScale = 0.3f;
+            Time.fixedDeltaTime = Time.timeScale * .02f;
+        }
+        else
+        {
+            Time.timeScale = 1;
+        }
+
 
         if (plane.Raycast(ray, out hit)) 
         {
