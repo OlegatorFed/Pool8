@@ -4,10 +4,23 @@ using UnityEngine;
 
 public class EnemyBall : MonoBehaviour
 {
-    //public bool isAlive;
+    private float coolDown = 5f;
+    public Ball player;
+
+    void Update()
+    {
+        Vector3 targetDirection = player.transform.position - transform.position;
+
+        Vector3 newDirection = Vector3.RotateTowards(transform.forward, targetDirection, 1f * Time.deltaTime, 0.5f);
+
+        transform.rotation = Quaternion.LookRotation(newDirection);
+    }
 
     private void OnCollisionEnter(Collision collision)
     {
-        Destroy(this.gameObject);
+        if (collision.gameObject.tag == "Ball")
+        {
+            Destroy(this.gameObject);
+        }
     }
 }
