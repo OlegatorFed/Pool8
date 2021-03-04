@@ -32,28 +32,44 @@ public class EnemyBall : MonoBehaviour
     {
         if (Target)
         {
-            // Show sight
-            var targetOffset = Target.transform.position - transform.position;
-            
-            Sight.positionCount = 2;
-            Sight.SetPositions(new[] {Vector3.zero, Vector3.forward * targetOffset.magnitude / transform.localScale.x});
+            ShowSight();
 
-            if ( ! IsInSight(Target) )
+            MakeFaceTarget();
+
+            bool outOfSight = ! IsInSight(Target);
+            
+            if ( outOfSight )
             {
                 Target = null;
             }
-            
-            // Rotate towards player
-            Vector3 targetDirection = targetOffset;
-            Vector3 newDirection = Vector3.RotateTowards(transform.forward, targetDirection, 1f * Time.deltaTime, 0.5f);
-
-            transform.rotation = Quaternion.LookRotation(newDirection);
         }
         else
         {
             // Hide sight
             Sight.positionCount = 0;
         }
+    }
+
+    private void MakeFaceTarget()
+    {
+        // Rotate towards player
+        Vector3 targetDirection = Target.transform.position - transform.position;
+        Vector3 newDirection = Vector3.RotateTowards(transform.forward, targetDirection, 1f * Time.deltaTime, 0.5f);
+
+        transform.rotation = Quaternion.LookRotation(newDirection);
+    }
+
+    private void ShowSight()
+    {
+        RaycastHit hitInfo;
+        Physics.Raycast(
+            transform.position,
+            transform.forward,
+            out hitInfo);
+        float laserLength = Mathf.Min(AimRange, hitInfo.distance);
+
+        Sight.positionCount = 2;
+        Sight.SetPositions(new[] {Vector3.zero, Vector3.forward * laserLength / transform.localScale.x});
     }
 
     private void SearchTarget()
