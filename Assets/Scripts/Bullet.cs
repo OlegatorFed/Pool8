@@ -6,21 +6,35 @@ public class Bullet : MonoBehaviour
 {
     private float bulletSpeed;
 
+    private float LifeTime = 179f;
+
     void Start()
     {
-        bulletSpeed = 0.01f;
+        bulletSpeed = 5f;
     }
 
     void Update()
     {
         transform.position += transform.up * bulletSpeed * Time.deltaTime;
-    }
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.tag == "Ball")
+        LifeTime -= 1f * Time.timeScale;
+
+        if (LifeTime <= 0)
         {
-            Destroy(collision.gameObject);
+            Destroy(this.gameObject);
         }
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Player")
+        {
+            Destroy(other.gameObject);
+        }
+        if (other.gameObject.tag != "EnemyBall")
+        {
+            Destroy(this.gameObject);
+        }
+    }
+
 }

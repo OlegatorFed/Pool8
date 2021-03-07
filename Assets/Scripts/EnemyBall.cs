@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class EnemyBall : MonoBehaviour
@@ -6,7 +7,11 @@ public class EnemyBall : MonoBehaviour
     public float AimRange = 3.5f;
     
     private Ball Target;
-    private float coolDown = 5f;
+    RaycastHit hitInfo;
+
+    public Bullet Bullet;
+    public float CoolDownRate;
+    private float coolDown = 0;
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -14,6 +19,7 @@ public class EnemyBall : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
+
     }
 
     private void Update()
@@ -26,6 +32,11 @@ public class EnemyBall : MonoBehaviour
         }
 
         SetSight();
+
+        ShootPlayer();
+        CoolDownUpdate();
+
+        //Debug.Log(IsAimingPlayer());
     }
 
     private void SetSight()
@@ -61,7 +72,7 @@ public class EnemyBall : MonoBehaviour
 
     private void ShowSight()
     {
-        RaycastHit hitInfo;
+        //RaycastHit hitInfo;
         Physics.Raycast(
             transform.position,
             transform.forward,
@@ -89,4 +100,33 @@ public class EnemyBall : MonoBehaviour
 
         return ballOffset.magnitude < AimRange;
     }
+    private bool IsAimingPlayer()
+    {
+        return hitInfo.transform.gameObject.tag == "Player" && Target;
+    }
+
+    private void ShootPlayer()
+    {
+        if (IsAimingPlayer() && coolDown <= 0)
+        {
+            Bullet BulletClone;
+
+            BulletClone = Instantiate<Bullet>(Bullet, transform.position, transform.rotation);
+            //Physics.IgnoreCollision(this.GetComponent<Collider>(), BulletClone.GetComponent<Collider>());
+
+            BulletClone.transform.up = transform.forward;
+
+            coolDown = CoolDownRate * 60f;
+        }
+
+    }
+
+    private void CoolDownUpdate()
+    {
+        if ( coolDown > 0 )
+        {
+            coolDown -= 1f * Time.timeScale;
+        }
+    }
+
 }

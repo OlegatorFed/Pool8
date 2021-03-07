@@ -46,18 +46,18 @@ public class Gameplay : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        var motionless = balls.All((Ball ball) => ball.IsStill);
+        //var motionless = balls.All((Ball ball) => ball.IsStill);
 
-        if ( motionless && !stillnessTrigger )
-        {
-            field.stopAllBalls();
-            stillnessTrigger = true;
-
-            Debug.Log("Boru tomare");
-        }
-        else if ( !motionless && stillnessTrigger )
-        {
-            stillnessTrigger = false;
-        }
+        //if ( motionless && !stillnessTrigger )
+        //{
+        //    field.stopAllBalls();
+        //    stillnessTrigger = true;
+        //
+        //    Debug.Log("Boru tomare");
+        //}
+        //else if ( !motionless && stillnessTrigger )
+        //{
+        //    stillnessTrigger = false;
+        //}
     }
 }
