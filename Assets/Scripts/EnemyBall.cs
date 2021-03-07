@@ -7,7 +7,7 @@ public class EnemyBall : MonoBehaviour
     public float AimRange = 3.5f;
     
     private Ball Target;
-    RaycastHit hitInfo;
+    RaycastHit aimHitInfo;
 
     public Bullet Bullet;
     public float CoolDownRate;
@@ -30,8 +30,10 @@ public class EnemyBall : MonoBehaviour
         {
             SearchTarget();
         }
+        
 
         SetSight();
+        SetAim();
 
         ShootPlayer();
         CoolDownUpdate();
@@ -72,7 +74,7 @@ public class EnemyBall : MonoBehaviour
 
     private void ShowSight()
     {
-        //RaycastHit hitInfo;
+        RaycastHit hitInfo;
         Physics.Raycast(
             transform.position,
             transform.forward,
@@ -102,7 +104,7 @@ public class EnemyBall : MonoBehaviour
     }
     private bool IsAimingPlayer()
     {
-        return hitInfo.transform.gameObject.tag == "Player" && Target;
+        return aimHitInfo.transform.gameObject.tag == "Player" && Target;
     }
 
     private void ShootPlayer()
@@ -127,6 +129,14 @@ public class EnemyBall : MonoBehaviour
         {
             coolDown -= 1f * Time.timeScale;
         }
+    }
+
+    private void SetAim()
+    {
+        Physics.Raycast(
+            transform.position,
+            transform.forward,
+            out aimHitInfo);
     }
 
 }
