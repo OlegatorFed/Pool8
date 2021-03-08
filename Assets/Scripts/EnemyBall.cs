@@ -3,6 +3,14 @@ using UnityEngine;
 
 public class EnemyBall : MonoBehaviour
 {
+    public enum TimeFactor
+    {
+        GameTime,
+        RealTime
+    }
+    
+    public TimeFactor bulletTimeFactor = TimeFactor.GameTime;
+    
     public LineRenderer Sight;
     public float AimRange = 3.5f;
     
@@ -67,9 +75,22 @@ public class EnemyBall : MonoBehaviour
     {
         // Rotate towards player
         Vector3 targetDirection = Target.transform.position - transform.position;
-        Vector3 newDirection = Vector3.RotateTowards(transform.forward, targetDirection, 1f * Time.deltaTime, 0.5f);
+        Vector3 newDirection = Vector3.RotateTowards(transform.forward, targetDirection, 1f * GetDeltaTime(), 0.5f);
 
         transform.rotation = Quaternion.LookRotation(newDirection);
+    }
+
+    private float GetDeltaTime()
+    {
+        switch (bulletTimeFactor)
+        {
+            case TimeFactor.GameTime:
+                return Time.deltaTime;
+            case TimeFactor.RealTime:
+                return Time.unscaledDeltaTime;
+        }
+
+        return 0;
     }
 
     private void ShowSight()

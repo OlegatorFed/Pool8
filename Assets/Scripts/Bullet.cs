@@ -4,6 +4,14 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
+    public enum TimeFactor
+    {
+        GameTime,
+        RealTime
+    }
+
+    public TimeFactor bulletTimeFactor = TimeFactor.GameTime;
+    
     private float bulletSpeed;
 
     private float LifeTime = 179f;
@@ -15,7 +23,9 @@ public class Bullet : MonoBehaviour
 
     void Update()
     {
-        transform.position += transform.up * bulletSpeed * Time.deltaTime;
+        float dt = GetDeltaTime();
+        
+        transform.position += transform.up * bulletSpeed * dt;
 
         LifeTime -= 1f * Time.timeScale;
 
@@ -23,6 +33,19 @@ public class Bullet : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
+    }
+
+    private float GetDeltaTime()
+    {
+        switch (bulletTimeFactor)
+        {
+            case TimeFactor.GameTime:
+                return Time.deltaTime;
+            case TimeFactor.RealTime:
+                return Time.unscaledDeltaTime;
+        }
+
+        return 0;
     }
 
     private void OnTriggerEnter(Collider other)
