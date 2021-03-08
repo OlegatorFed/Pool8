@@ -11,9 +11,9 @@ public class Gameplay : MonoBehaviour
     //private CueScript cue;
     public static Gameplay instance = null;
 
-    public RespawnButton respawnButton;
+    public DeathCanvas deathCanvas;
 
-    
+    public CueScript cue;
 
     public bool IsPlayerDead = false;
 
@@ -58,7 +58,7 @@ public class Gameplay : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
 
         //var motionless = balls.All((Ball ball) => ball.IsStill);
 
@@ -75,15 +75,25 @@ public class Gameplay : MonoBehaviour
         //}
     }
 
-    public void PlayerGetsKilled()
+    public void PlayerGetsKilled(GameObject player)
     {
+        Destroy(player);
+        Destroy(cue.gameObject);
+
         IsPlayerDead = true;
 
-        respawnButton.gameObject.SetActive(true);
+        ShowDeathUI();
     }
 
     public void RestartLevel()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    private void ShowDeathUI()
+    {
+
+        deathCanvas.gameObject.SetActive(true);
+
     }
 }

@@ -16,6 +16,9 @@ public class Ball : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (this.transform.position.y < 0 - this.transform.GetComponent<Collider>().bounds.size.y)
+        {
+            Gameplay.instance.PlayerGetsKilled(this.gameObject);
+        }
     }
 }

@@ -29,8 +29,7 @@ public class Bullet : MonoBehaviour
     {
         if (other.gameObject.tag == "Player")
         {
-            Gameplay.instance.PlayerGetsKilled();
-            Destroy(other.gameObject);
+            Gameplay.instance.PlayerGetsKilled(other.gameObject);
         }
         if (other.gameObject.tag != "EnemyBall")
         {
