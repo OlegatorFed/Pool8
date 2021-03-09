@@ -125,7 +125,7 @@ public class EnemyBall : MonoBehaviour
     }
     private bool IsAimingPlayer()
     {
-        return aimHitInfo.transform.gameObject.tag == "Player" && Target;
+        return aimHitInfo.transform != null ? aimHitInfo.transform.gameObject.tag == "Player" && Target : false;
     }
 
     private void ShootPlayer()
