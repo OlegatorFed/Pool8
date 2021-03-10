@@ -1,7 +1,5 @@
 using Pool8;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -12,11 +10,14 @@ public class Gameplay : MonoBehaviour
     public static Gameplay instance = null;
 
     public DeathCanvas deathCanvas;
-
+    public CollectableText collectableText;
+    
     public CueScript cue;
 
     public bool IsPlayerDead = false;
-
+    
+    private int coinAmount = 0;
+    private int totalCoinAmount = 0;
     private Ball[] balls;
     private Field field;
     private Logic logic;
@@ -28,7 +29,9 @@ public class Gameplay : MonoBehaviour
     {
         instance = this;
 
-        
+        totalCoinAmount = GameObject.FindObjectsOfType<CollectableCoin>().Length;
+
+        collectableText.Initialize(totalCoinAmount);
 
         //balls = GameObject.FindGameObjectsWithTag("Ball")
         //    .Select((GameObject gameObject) => gameObject.GetComponent<Ball>())
@@ -95,5 +98,12 @@ public class Gameplay : MonoBehaviour
 
         deathCanvas.gameObject.SetActive(true);
 
+    }
+
+    public void IncreaseCoinAmount()
+    {
+        coinAmount++;
+
+        collectableText.SetCoinText(coinAmount, totalCoinAmount);
     }
 }
