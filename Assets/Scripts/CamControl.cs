@@ -15,10 +15,10 @@ public class CamControl : MonoBehaviour
         Vector3 pos = transform.position;
 
         //too bad...
-        float UpButton = Input.GetKey("up") || Input.mousePosition.y >= Screen.height - PanBorder ? 1 : 0;
-        float DownButton = Input.GetKey("down") || Input.mousePosition.y <= PanBorder ? -1 : 0;
-        float RightButton = Input.GetKey("right") || Input.mousePosition.x >= Screen.width - PanBorder ? 1 : 0;
-        float LeftButton = Input.GetKey("left") || Input.mousePosition.x <= PanBorder ? -1 : 0;
+        float UpButton = Input.GetKey("w") || Input.mousePosition.y >= Screen.height - PanBorder ? 1 : 0;
+        float DownButton = Input.GetKey("s") || Input.mousePosition.y <= PanBorder ? -1 : 0;
+        float RightButton = Input.GetKey("d") || Input.mousePosition.x >= Screen.width - PanBorder ? 1 : 0;
+        float LeftButton = Input.GetKey("a") || Input.mousePosition.x <= PanBorder ? -1 : 0;
 
         pos += new Vector3(RightButton + LeftButton, 0, UpButton + DownButton) * PanSpeed * Time.deltaTime;
 

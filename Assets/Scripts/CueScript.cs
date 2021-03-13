@@ -20,10 +20,9 @@ public class CueScript : MonoBehaviour
         float hit;
         bool cueIsActive;
 
+        Plane plane = new Plane(Vector3.up, ball.gameObject.transform.position);
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-        Plane plane = new Plane(Vector3.up, ball.transform.position);
 
         lineRenderer.enabled = Input.GetMouseButton(0);
         cueIsActive = Input.GetMouseButton(0);

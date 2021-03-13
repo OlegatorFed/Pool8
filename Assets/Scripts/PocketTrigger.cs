@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PocketTrigger : MonoBehaviour
 {
+
     private void OnTriggerEnter(Collider other)
     {
-        other.transform.localScale = Vector3.one;
+        SceneManager.LoadScene(1);
     }
 }
