@@ -42,7 +42,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5224268106444420503}
-  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: -5885091460419426104, guid: 7249a243c70deca4692b73498c37296f, type: 3}
 --- !u!23 &5224268106444420497
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -95,7 +95,7 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 0.55
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &6597156642155570508
 MonoBehaviour:
@@ -109,6 +109,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 148ea20426ccafd408c17bd29edcc241, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bulletTimeFactor: 0
   Sight: {fileID: 7025088582376927803}
   AimRange: 3.5
   Bullet: {fileID: 7387726003043403891, guid: edf52e0d0f591264390f400524cabb36, type: 3}
