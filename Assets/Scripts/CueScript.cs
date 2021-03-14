@@ -41,7 +41,7 @@ public class CueScript : MonoBehaviour
         if (plane.Raycast(ray, out hit)) 
         {
             lineRenderer.SetPosition(1, ball.transform.position);
-            lineRenderer.SetPosition(0, ray.GetPoint(hit) + new Vector3(0, ball.transform.position.y, 0));
+            lineRenderer.SetPosition(0, ray.GetPoint(hit));
         }
 
         if (Input.GetMouseButtonUp(0))
