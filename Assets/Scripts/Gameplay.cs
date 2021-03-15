@@ -1,5 +1,5 @@
 using System;
-
+using System.Timers;
 using Pool8;
 
 using UnityEngine;
@@ -14,19 +14,25 @@ public class Gameplay : MonoBehaviour
 
     public DeathCanvas deathCanvas;
     public CollectableText collectableText;
+    public TimerText timerText;
     
     public CueScript cue;
+
+    public CamControl camAnchor;
+
+    public Ball playerBall;
 
     public bool IsPlayerDead = false;
     
     private int coinAmount = 0;
     private int totalCoinAmount = 0;
-    private Ball[] balls;
-    private Field field;
-    private Logic logic;
-    private Ruler ruler;
 
-    bool stillnessTrigger;
+    //private Ball[] balls;
+    //private Field field;
+    //private Logic logic;
+    //private Ruler ruler;
+
+    //bool stillnessTrigger;
 
     private void Awake()
     {
@@ -35,6 +41,8 @@ public class Gameplay : MonoBehaviour
         totalCoinAmount = GameObject.FindObjectsOfType<CollectableCoin>().Length;
 
         collectableText.Initialize(totalCoinAmount);
+
+        initCameraPosition();
 
         //balls = GameObject.FindGameObjectsWithTag("Ball")
         //    .Select((GameObject gameObject) => gameObject.GetComponent<Ball>())
@@ -70,6 +78,7 @@ public class Gameplay : MonoBehaviour
             Win();
         }
 
+        timerText.SetTimerText((int)Time.time / 60, (int)Time.time % 60);
         //var motionless = balls.All((Ball ball) => ball.IsStill);
 
         //if ( motionless && !stillnessTrigger )
@@ -123,5 +132,10 @@ public class Gameplay : MonoBehaviour
     public void DiamondCollect()
     {
         // do nothing
+    }
+
+    private void initCameraPosition()
+    {
+        camAnchor.transform.position = new Vector3(playerBall.transform.position.x, 0, playerBall.transform.position.z);
     }
 }
