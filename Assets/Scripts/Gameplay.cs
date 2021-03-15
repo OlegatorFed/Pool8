@@ -1,3 +1,5 @@
+using System;
+
 using Pool8;
 
 using UnityEngine;
@@ -8,6 +10,7 @@ public class Gameplay : MonoBehaviour
 
     //private CueScript cue;
     public static Gameplay instance = null;
+    public event Action OnWin;
 
     public DeathCanvas deathCanvas;
     public CollectableText collectableText;
@@ -114,8 +117,6 @@ public class Gameplay : MonoBehaviour
     //fix this as well
     private void Win()
     {
-        IsPlayerDead = true;
-        Destroy(cue.gameObject);
-        ShowDeathUI();
+        OnWin?.Invoke();
     }
 }
