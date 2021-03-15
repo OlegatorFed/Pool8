@@ -119,4 +119,9 @@ public class Gameplay : MonoBehaviour
     {
         OnWin?.Invoke();
     }
+
+    public void DiamondCollect()
+    {
+        // do nothing
+    }
 }
