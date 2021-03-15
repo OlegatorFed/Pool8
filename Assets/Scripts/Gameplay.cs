@@ -61,7 +61,11 @@ public class Gameplay : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        //fix it later
+        if (coinAmount == totalCoinAmount && IsPlayerDead == false)
+        {
+            Win();
+        }
 
         //var motionless = balls.All((Ball ball) => ball.IsStill);
 
@@ -105,5 +109,13 @@ public class Gameplay : MonoBehaviour
         coinAmount++;
 
         collectableText.SetCoinText(coinAmount, totalCoinAmount);
+    }
+
+    //fix this as well
+    private void Win()
+    {
+        IsPlayerDead = true;
+        Destroy(cue.gameObject);
+        ShowDeathUI();
     }
 }
