@@ -124,7 +124,7 @@ public class Gameplay : MonoBehaviour
     }
 
     //fix this as well
-    private void Win()
+    public void Win()
     {
         OnWin?.Invoke();
     }
