@@ -44,9 +44,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c62a79fe955a8de4faceeb8eb45e40e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PanSpeed: 20
-  PanBorder: 10
-  PanLimit: {x: 10, y: 10}
+  VelocityMulitplier: 0.7
+  PanSpeed: 0.7
+  FovSmooth: 2
+  MaxFov: 64
+  MinFov: 40
+  MaximalVelocity: 20
+  MinimalVelocity: 3
 --- !u!1 &755703803404925416
 GameObject:
   m_ObjectHideFlags: 0
