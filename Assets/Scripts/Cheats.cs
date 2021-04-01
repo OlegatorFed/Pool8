@@ -6,22 +6,17 @@ using UnityEngine;
 
 public class Cheats : MonoBehaviour
 {
+    private (int, Action)[] _cheats;
+    private List<KeyCode> _cheatMemory = new List<KeyCode>();
+    private CheatTable _table = null;
+    
     // All cheats described here
     private void MakeCheats()
     {
-        var tableCheatsAll = new (string, Action)[]
-        {
-            ("WINRAR", Win),
-            ("AWAKEORFEI", Suicide),
-            ("NOTAROBOT", KillAI),
-            ("AMOGUS", Restart),
-        };
+        _table = new CheatTable();
 
-        _cheats = tableCheatsAll.Select(TranslateTableCheat).ToArray();
+        _cheats = _table.Cheats.Select(TranslateTableCheat).ToArray();
     }
-    
-    private (int, Action)[] _cheats;
-    private List<KeyCode> _cheatMemory = new List<KeyCode>();
 
     private void Awake()
     {
@@ -76,28 +71,5 @@ public class Cheats : MonoBehaviour
     private KeyCode CharToKey(char c)
     {
         return (KeyCode) Enum.Parse(typeof(KeyCode), c.ToString());
-    }
-
-    public void Win()
-    {
-        Gameplay.instance.Win();
-    }
-
-    public void Suicide()
-    {
-        Gameplay.instance.PlayerGetsKilled(GameObject.FindWithTag("Player"));
-    }
-
-    public void KillAI()
-    {
-        foreach (var enemy in GameObject.FindGameObjectsWithTag("EnemyBall"))
-        {
-            Destroy(enemy);
-        }
-    }
-
-    public void Restart()
-    {
-        Gameplay.instance.RestartLevel();
     }
 }
