@@ -27,7 +27,7 @@ public class CamControl : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
-        Vector3 desiredPosition = _target.position + _target.velocity * VelocityMulitplier;
+        Vector3 desiredPosition = _target.transform.position + _target.velocity * VelocityMulitplier;
 
         transform.position = Vector3.SmoothDamp(transform.position, desiredPosition, ref _cameraVelocity, PanSpeed);
 

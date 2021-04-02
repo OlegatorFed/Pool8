@@ -1,25 +1,35 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class DestructableWall : MonoBehaviour
 {
-
-    void Start()
+    private class DestroyWallAction : IRewindableAction
     {
+        private GameObject wall;
         
-    }
+        public DestroyWallAction(GameObject wall)
+        {
+            this.wall = wall;
+        }
+        
+        public void Dispatch()
+        {
+            wall.SetActive(false);
+        }
 
-    void Update()
-    {
-        
+        public void Rewind()
+        {
+            wall.SetActive(true);
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
+        if (Input.GetKey(KeyCode.R))
+            return;
+        
         if (collision.gameObject.tag == "Player")
         {
-            Destroy(this.gameObject);
+            RewindManager.instance.Dispatch(new DestroyWallAction(gameObject));
         }
 
     }

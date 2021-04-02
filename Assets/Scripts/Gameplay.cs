@@ -93,15 +93,54 @@ public class Gameplay : MonoBehaviour
         //    stillnessTrigger = false;
         //}
     }
+    
+    private void LateUpdate()
+    {
+        Physics.Simulate(Time.deltaTime);
+    }
+
+    private class PlayerDeathAction : IRewindableAction
+    {
+        private GameObject player;
+        private GameObject cue;
+
+        public PlayerDeathAction(GameObject player, GameObject cue)
+        {
+            this.player = player;
+            this.cue = cue;
+        }
+        
+        public void Dispatch()
+        {
+            player.GetComponent<Ball>().Kill();
+            cue.SetActive(false);
+
+            instance.IsPlayerDead = true;
+            instance.SetDeathUI(true);
+
+            RewindManager.instance.SetFreeze(true);
+        }
+
+        public void Rewind()
+        {
+            player.GetComponent<Ball>().Revive();
+            cue.SetActive(true);
+
+            instance.IsPlayerDead = false;
+            instance.SetDeathUI(false);
+
+            RewindManager.instance.SetFreeze(false);
+        }
+    }
 
     public void PlayerGetsKilled(GameObject player)
     {
-        Destroy(player);
-        Destroy(cue.gameObject);
-
-        IsPlayerDead = true;
-
-        ShowDeathUI();
+        if (Input.GetKey(KeyCode.R))
+        {
+            return;
+        }
+        
+        RewindManager.instance.Dispatch(new PlayerDeathAction(player, cue.gameObject));
     }
 
     public void RestartLevel()
@@ -109,10 +148,10 @@ public class Gameplay : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    private void ShowDeathUI()
+    private void SetDeathUI(bool value)
     {
 
-        deathCanvas.gameObject.SetActive(true);
+        deathCanvas.gameObject.SetActive(value);
 
     }
 

@@ -35,6 +35,7 @@ public class CueScript : MonoBehaviour
         else
         {
             Time.timeScale = 1;
+            Time.fixedDeltaTime = Time.timeScale * .02f;
         }
 
 
