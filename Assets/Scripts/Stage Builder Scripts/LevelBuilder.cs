@@ -88,6 +88,12 @@ public class LevelBuilder : MonoBehaviour
                         mapProps.Add(Instantiate(enemyBall, brushCoor, Quaternion.identity).gameObject);
                         mapProps.Add(Instantiate(planeProp, brushCoor, Quaternion.identity).gameObject);
                         break;
+                    case 'E':
+                        EnemyBall e = Instantiate(enemyBall, brushCoor + wallAscension*0.6f, Quaternion.identity);
+                        e.Bullet.bulletTimeFactor = Bullet.TimeFactor.RealTime;
+                        mapProps.Add(e.gameObject);
+                        mapProps.Add(Instantiate(planeProp, brushCoor, Quaternion.identity).gameObject);
+                        break;
                     case 'd':
                         mapProps.Add(Instantiate(desWall, brushCoor + wallAscension, Quaternion.identity).gameObject);
                         mapProps.Add(Instantiate(planeProp, brushCoor, Quaternion.identity).gameObject);
