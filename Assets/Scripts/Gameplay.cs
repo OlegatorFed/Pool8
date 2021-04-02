@@ -11,6 +11,7 @@ public class Gameplay : MonoBehaviour
     //private CueScript cue;
     public static Gameplay instance = null;
     public event Action OnWin;
+    public event Action OnWinAnother;
 
     public DeathCanvas deathCanvas;
     public CollectableText collectableText;
@@ -24,8 +25,8 @@ public class Gameplay : MonoBehaviour
 
     public bool IsPlayerDead = false;
     
-    private int coinAmount = 0;
-    private int totalCoinAmount = 0;
+    public int coinAmount = 0;
+    public int totalCoinAmount = 0;
 
     //private Ball[] balls;
     //private Field field;
@@ -38,9 +39,9 @@ public class Gameplay : MonoBehaviour
     {
         instance = this;
 
-        totalCoinAmount = GameObject.FindObjectsOfType<CollectableCoin>().Length;
+        //totalCoinAmount = GameObject.FindObjectsOfType<CollectableCoin>().Length;
 
-        collectableText.Initialize(totalCoinAmount);
+        //collectableText.Initialize(totalCoinAmount);
 
         initCameraPosition();
 
@@ -75,7 +76,8 @@ public class Gameplay : MonoBehaviour
         //fix it later
         if (coinAmount == totalCoinAmount && IsPlayerDead == false)
         {
-            Win();
+            //Win();
+            WinAnother();
         }
 
         timerText.SetTimerText((int)Time.time / 60, (int)Time.time % 60);
@@ -166,6 +168,11 @@ public class Gameplay : MonoBehaviour
     public void Win()
     {
         OnWin?.Invoke();
+    }
+
+    public void WinAnother()
+    {
+        OnWinAnother?.Invoke();
     }
 
     public void DiamondCollect()
