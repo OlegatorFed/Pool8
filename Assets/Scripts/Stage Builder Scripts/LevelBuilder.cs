@@ -16,23 +16,42 @@ public class LevelBuilder : MonoBehaviour
     public CollectableCoin coin;
     public DestructableWall desWall;
 
+    public LevelCyclerAnother cyclerAnother;
+
     public PlaneProp safePlane;
     public Ball player;
     public CueScript cue;
+
+    private int levelCount = 0;
+    
+    private string[] levelList;
+    private string levelPath = "Assets\\Scripts\\Stage Builder Scripts\\";
 
     public Material PlayerMaterial;
 
     Vector3 wallAscension = new Vector3(0, 0.5f, 0);
 
+    
 
     // Start is called before the first frame update
     void Start()
     {
-        string level = ReadLevel("Assets\\Scripts\\Stage Builder Scripts\\TestLevel");
+        string levelListString = File.ReadAllText("Assets\\Scripts\\Stage Builder Scripts\\LevelList");
 
-        Debug.Log(level);
+        levelList = levelListString.Split(' ');
 
-        BuildLevel(level);
+        cyclerAnother.nextScene = levelList[levelCount + 1];
+
+        foreach (string s in levelList)
+        {
+            Debug.Log(s);
+        }
+
+        //Debug.Log(levelPath + levelList[levelCount]);
+
+        //Debug.Log(levelList[levelCount]);
+
+        BuildLevel(ReadLevel(levelList[levelCount]));
 
     }
 
@@ -44,15 +63,16 @@ public class LevelBuilder : MonoBehaviour
 
     public string ReadLevel(string name)
     {
-        string path = name;
+        string readText = File.ReadAllText("Assets\\Scripts\\Stage Builder Scripts\\" + levelList[levelCount]);
 
-        string readText = File.ReadAllText(path);
 
         return readText;
     }
 
-    private void BuildLevel(string textMap)
+    private void BuildLevel(string path)
     {
+        string textMap = ReadLevel(path);
+
         int lineLength;
         Vector3 brushCoor;
         
@@ -115,6 +135,20 @@ public class LevelBuilder : MonoBehaviour
         {
             Destroy(obj);
         }
+
+        if (levelCount + 1 <= levelList.Length - 1)
+        {
+            levelCount += 1;
+        }
+        else
+        {
+            levelCount = 0;
+            cyclerAnother.nextScene = levelList[levelCount + 1];
+        }
+        
+
+        Debug.Log(nextLevel);
+        Debug.Log(ReadLevel( nextLevel));
 
         BuildLevel(ReadLevel(nextLevel));
     }
