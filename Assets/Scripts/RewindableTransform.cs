@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
@@ -6,13 +8,13 @@ public class RewindableTransform : MonoBehaviour
 {
     public float TimeStamp = 0.2f;
     
-    struct Frame
+    struct Frame : IEquatable<Frame>
     {
         public Vector3 position;
         public Vector3 velocity;
         public Vector3 angularVelocity;
         public Quaternion rotation;
-        public float timeSpan;
+        public float frameTime;
 
         public static Frame Lerp(Frame a, Frame b, float t)
         {
@@ -24,17 +26,33 @@ public class RewindableTransform : MonoBehaviour
                 angularVelocity = Vector3.Lerp(a.angularVelocity, b.angularVelocity, t),
             };
         }
+
+        public bool Equals(Frame other)
+        {
+            return
+                position == other.position &&
+                velocity == other.velocity &&
+                angularVelocity == other.angularVelocity &&
+                rotation == other.rotation;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Frame other && Equals(other);
+        }
+
+        public override int GetHashCode() => 0;
     }
     
-    private List<Frame> _clip = new List<Frame>();
-    
-    private Rigidbody _rigidbody = null;
-    private float _localTime = 0f;
-    private bool _freezeState = false;
+    private List<Frame> clip = new List<Frame>();
+    private Rigidbody rigidbody = null;
+    private float localTime = 0f;
+    private bool freezeState = false;
+    private int frames = 0;
 
     private void Awake()
     {
-        _rigidbody = GetComponent<Rigidbody>();
+        rigidbody = GetComponent<Rigidbody>();
 
         MakeRecord();
         StartRecording();
@@ -44,7 +62,7 @@ public class RewindableTransform : MonoBehaviour
 
     private void Freeze(bool value)
     {
-        _freezeState = value;
+        freezeState = value;
         
         if (!value)
         {
@@ -56,34 +74,32 @@ public class RewindableTransform : MonoBehaviour
         }
     }
     
-    private void StartRecording() => InvokeRepeating("MakeRecord", TimeStamp - (_localTime % TimeStamp), TimeStamp);
+    private void StartRecording() => StartCoroutine(MakeRecord());
 
-    private void StopRecording() => CancelInvoke("MakeRecord");
+    private void StopRecording() => StopAllCoroutines();
     
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.R))
         {
-            if (_rigidbody)
-                _rigidbody.isKinematic = true;
+            if (rigidbody)
+                rigidbody.isKinematic = true;
             
-            int frameIndex = Mathf.FloorToInt(_localTime / TimeStamp);
-            
-            AddFrame(frameIndex, _localTime % TimeStamp);
+            AddFrame(localTime);
             
             StopRecording();
         }
         
         if (Input.GetKey(KeyCode.R))
         {
-            Frame frame = FrameAt(_localTime);
+            Frame frame = RewindedFrame();
             
-            if (_rigidbody)
+            if (rigidbody)
             {
-                _rigidbody.position = frame.position;
-                _rigidbody.rotation = frame.rotation;
-                _rigidbody.velocity = frame.velocity;
-                _rigidbody.angularVelocity = frame.angularVelocity;
+                rigidbody.position = frame.position;
+                rigidbody.rotation = frame.rotation;
+                rigidbody.velocity = frame.velocity;
+                rigidbody.angularVelocity = frame.angularVelocity;
             }
             else
             {
@@ -94,30 +110,38 @@ public class RewindableTransform : MonoBehaviour
 
         if (Input.GetKeyUp(KeyCode.R))
         {
-            if (_rigidbody)
+            if (rigidbody)
             {
-                Frame frame = FrameAt(_localTime);
+                Frame frame = RewindedFrame();
                 
-                _rigidbody.isKinematic = false;
-                _rigidbody.velocity = frame.velocity;
-                _rigidbody.angularVelocity = frame.angularVelocity;
+                rigidbody.isKinematic = false;
+                rigidbody.velocity = frame.velocity;
+                rigidbody.angularVelocity = frame.angularVelocity;
             }
             
             StartRecording();
         }
     }
 
-    private Frame FrameAt(float time)
+    private Frame RewindedFrame()
     {
-        int frameIndex = Mathf.FloorToInt(time / TimeStamp);
+        while (frames > 1 && clip[frames - 2].frameTime >= localTime)
+        {
 
-        frameIndex = Mathf.Max(1, frameIndex);
-            
-        Frame currentFrame = _clip[frameIndex];
-        Frame previousFrame = _clip[frameIndex - 1];
+            frames--;
 
-        float frameSpan = currentFrame.timeSpan;
-        float t = (_localTime % frameSpan) / frameSpan;
+        }
+
+        if (frames == 1)
+        {
+            return clip[0];
+        }
+
+        Frame currentFrame = clip[frames - 1];
+        Frame previousFrame = clip[frames - 2];
+
+        float frameSpan = currentFrame.frameTime - previousFrame.frameTime;
+        float t = (localTime - previousFrame.frameTime) / frameSpan;
 
         return Frame.Lerp(previousFrame, currentFrame, t);
     }
@@ -126,45 +150,60 @@ public class RewindableTransform : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.R))
         {
-            _localTime -= Time.deltaTime;
-            _localTime = Mathf.Max(0, _localTime);
+            localTime -= Time.deltaTime;
+            localTime = Mathf.Max(0, localTime);
             return;
         }
         
-        if (!_freezeState)
+        if (!freezeState)
         {
-            _localTime += Time.deltaTime;
+            localTime += Time.deltaTime;
         }
     }
 
-    private void MakeRecord()
+    private IEnumerator MakeRecord()
     {
-        int frameIndex = Mathf.FloorToInt(_localTime / TimeStamp);
+        while (true)
+        {
+            AddFrame(localTime);
 
-        AddFrame(frameIndex, TimeStamp);
+            yield return new WaitForSeconds(TimeStamp);
+        }
     }
 
-    private void AddFrame(int clipIndex, float timeStamp)
+    private void AddFrame(float frameTime)
     {
-        if (_rigidbody)
+        if (frames > 0 && Mathf.Approximately(clip[frames - 1].frameTime, frameTime))
+
+            return;
+
+        Frame frame;
+        
+        if (rigidbody)
         {
-            _clip.Insert(clipIndex, new Frame
+            frame = new Frame
             {
-                position = _rigidbody.position,
-                velocity = _rigidbody.velocity,
-                angularVelocity = _rigidbody.angularVelocity,
-                rotation = _rigidbody.rotation,
-                timeSpan = timeStamp
-            });
+                position = rigidbody.position,
+                velocity = rigidbody.velocity,
+                angularVelocity = rigidbody.angularVelocity,
+                rotation = rigidbody.rotation,
+                frameTime = frameTime
+            };
         }
         else
         {
-            _clip.Insert(clipIndex, new Frame
+            frame = new Frame
             {
                 position = transform.position,
                 rotation = transform.rotation,
-                timeSpan = timeStamp
-            });
+                frameTime = frameTime
+            };
         }
+
+        if (frames > 0 && frame.Equals(clip[frames - 1]))
+            
+            return;
+            
+        clip.Insert(frames++, frame);
     }
 }
