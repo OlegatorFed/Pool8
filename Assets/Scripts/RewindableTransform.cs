@@ -85,7 +85,7 @@ public class RewindableTransform : MonoBehaviour
             if (rigidbody)
                 rigidbody.isKinematic = true;
             
-            AddFrame(localTime);
+            AddFrame(localTime, true);
             
             StopRecording();
         }
@@ -165,13 +165,13 @@ public class RewindableTransform : MonoBehaviour
     {
         while (true)
         {
-            AddFrame(localTime);
+            AddFrame(localTime, false);
 
             yield return new WaitForSeconds(TimeStamp);
         }
     }
 
-    private void AddFrame(float frameTime)
+    private void AddFrame(float frameTime, bool forced)
     {
         if (frames > 0 && Mathf.Approximately(clip[frames - 1].frameTime, frameTime))
 
@@ -200,7 +200,7 @@ public class RewindableTransform : MonoBehaviour
             };
         }
 
-        if (frames > 0 && frame.Equals(clip[frames - 1]))
+        if (!forced && frames > 0 && frame.Equals(clip[frames - 1]))
             
             return;
             
