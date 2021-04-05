@@ -130,6 +130,7 @@ public class LevelBuilder : MonoBehaviour
     public void NextLevelLoad(string nextLevel)
     {
         player.transform.position = safePlane.transform.position + wallAscension;
+        player.GetComponent<Rigidbody>().velocity = Vector3.zero;
 
         foreach (GameObject obj in mapProps)
         {
