@@ -30,7 +30,7 @@ public class LevelBuilder : MonoBehaviour
     public Material PlayerMaterial;
 
     Vector3 wallAscension = new Vector3(0, 0.5f, 0);
-
+    Vector3 enemyAscension = new Vector3(0, 0.15f, 0);
     
 
     // Start is called before the first frame update
@@ -105,7 +105,7 @@ public class LevelBuilder : MonoBehaviour
                         mapProps.Add(Instantiate(planeProp, brushCoor, Quaternion.identity).gameObject);
                         break;
                     case 'e':
-                        mapProps.Add(Instantiate(enemyBall, brushCoor, Quaternion.identity).gameObject);
+                        mapProps.Add(Instantiate(enemyBall, brushCoor + enemyAscension, Quaternion.identity).gameObject);
                         mapProps.Add(Instantiate(planeProp, brushCoor, Quaternion.identity).gameObject);
                         break;
                     //case 'E':
