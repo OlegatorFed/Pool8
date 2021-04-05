@@ -106,7 +106,7 @@ Rigidbody:
   m_GameObject: {fileID: 1609507335884980087}
   serializedVersion: 2
   m_Mass: 1
-  m_Drag: 0
+  m_Drag: 1
   m_AngularDrag: 20
   m_UseGravity: 1
   m_IsKinematic: 0
@@ -128,3 +128,4 @@ MonoBehaviour:
   rigidbody: {fileID: 1609507335884980084}
   SphereRadius: 0.159709
   SphereFeet: 0.17
+  FeetThreshold: 0.03
