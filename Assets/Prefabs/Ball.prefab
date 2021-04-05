@@ -126,3 +126,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rigidbody: {fileID: 1609507335884980084}
+  SphereRadius: 0.159709
+  SphereFeet: 0.17
