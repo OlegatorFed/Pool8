@@ -1,9 +1,6 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
+using UnityEditor;
 using UnityEngine;
 
 public class LevelBuilder : MonoBehaviour
@@ -40,19 +37,11 @@ public class LevelBuilder : MonoBehaviour
 
         levelList = levelListString.Split(' ');
 
-        cyclerAnother.nextScene = levelList[levelCount + 1];
+        cyclerAnother.nextScene = levelList[1 % levelList.Length];
 
-        foreach (string s in levelList)
-        {
-            Debug.Log(s);
-        }
+        BuildLevel(levelList[0]);
 
-        //Debug.Log(levelPath + levelList[levelCount]);
-
-        //Debug.Log(levelList[levelCount]);
-
-        BuildLevel(ReadLevel(levelList[levelCount]));
-
+        levelCount++;
     }
 
     // Update is called once per frame
@@ -61,65 +50,57 @@ public class LevelBuilder : MonoBehaviour
         
     }
 
-    public string ReadLevel(string name)
+    public Texture2D ReadLevel(string name)
     {
-        string readText = File.ReadAllText("Assets\\Scripts\\Stage Builder Scripts\\" + levelList[levelCount]);
+        var levelData = Resources.Load<Texture2D>($"Levels\\{name}");
 
-
-        return readText;
+        return levelData;
     }
 
     private void BuildLevel(string path)
     {
-        string textMap = ReadLevel(path);
+        Texture2D imageMap = ReadLevel(path);
 
-        int lineLength;
         Vector3 brushCoor;
-        
-        string[] lineText = textMap.Split('\n');
-        int lines = lineText.Length;
 
-
-        for (int i = 0; i < lines; i++)
+        for (int i = 0; i < imageMap.height; i++)
         {
-            lineLength = lineText[i].Length;
-
-            for (int j = 0; j < lineLength; j++)
+            for (int j = 0; j < imageMap.width; j++)
             {
                 brushCoor = new Vector3(i, 0, j);
 
-                switch (lineText[i][j])
-                {
-                    case 'w':
-                        mapProps.Add(Instantiate(wallProp, brushCoor + wallAscension, Quaternion.identity).gameObject);
-                        break;
-                    case '.':
-                        mapProps.Add(Instantiate(planeProp, brushCoor, Quaternion.identity).gameObject);
-                        break;
-                    case 'P':
-                        mapProps.Add(Instantiate(planeProp, brushCoor, Quaternion.identity).gameObject);
-                        player.transform.position = brushCoor + wallAscension * 1.5f;
-                        break;
-                    case 'c':
-                        mapProps.Add(Instantiate(coin, brushCoor, Quaternion.identity).gameObject);
-                        mapProps.Add(Instantiate(planeProp, brushCoor, Quaternion.identity).gameObject);
-                        break;
-                    case 'e':
-                        mapProps.Add(Instantiate(enemyBall, brushCoor + enemyAscension, Quaternion.identity).gameObject);
-                        mapProps.Add(Instantiate(planeProp, brushCoor, Quaternion.identity).gameObject);
-                        break;
-                    //case 'E':
-                    //    EnemyBall e = Instantiate(enemyBall, brushCoor + wallAscension*0.6f, Quaternion.identity);
-                    //    e.Bullet.bulletTimeFactor = Bullet.TimeFactor.RealTime;
-                    //    mapProps.Add(e.gameObject);
-                    //    mapProps.Add(Instantiate(planeProp, brushCoor, Quaternion.identity).gameObject);
-                    //    break;
-                    case 'd':
-                        mapProps.Add(Instantiate(desWall, brushCoor + wallAscension, Quaternion.identity).gameObject);
-                        mapProps.Add(Instantiate(planeProp, brushCoor, Quaternion.identity).gameObject);
-                        break;
-                }
+                Color pixel = imageMap.GetPixel(j, imageMap.height - i - 1);
 
+                int colorCode = ((int) (pixel.r * 255) << 16) | ((int) (pixel.g * 255) << 8) | ((int) (pixel.b * 255) << 0);
+
+                if (colorCode == 0x7F7F7F)
+                {
+                    mapProps.Add(Instantiate(wallProp, brushCoor + wallAscension, Quaternion.identity).gameObject);
+                }
+                else if (colorCode == 0xFFFFFF)
+                {
+                    mapProps.Add(Instantiate(planeProp, brushCoor, Quaternion.identity).gameObject);
+                }
+                else if (colorCode == 0xFFD800)
+                {
+                    mapProps.Add(Instantiate(coin, brushCoor, Quaternion.identity).gameObject);
+                    mapProps.Add(Instantiate(planeProp, brushCoor, Quaternion.identity).gameObject);
+                }
+                else if (colorCode == 0xED1C24)
+                {
+                    mapProps.Add(Instantiate(enemyBall, brushCoor + enemyAscension, Quaternion.identity).gameObject);
+                    mapProps.Add(Instantiate(planeProp, brushCoor, Quaternion.identity).gameObject);
+                }
+                else if (colorCode == 0x4CFF00)
+                {
+                    mapProps.Add(Instantiate(desWall, brushCoor + wallAscension, Quaternion.identity).gameObject);
+                    mapProps.Add(Instantiate(planeProp, brushCoor, Quaternion.identity).gameObject);
+                }
+                else if (colorCode == 0x00A2E8)
+                {
+                    mapProps.Add(Instantiate(planeProp, brushCoor, Quaternion.identity).gameObject);
+                    player.transform.position = brushCoor + wallAscension * 1.5f;
+                }
             }
         }
         int totalCoins = GameObject.FindObjectsOfType<CollectableCoin>().Length;
@@ -137,20 +118,8 @@ public class LevelBuilder : MonoBehaviour
             Destroy(obj);
         }
 
-        if (levelCount + 1 <= levelList.Length - 1)
-        {
-            levelCount += 1;
-        }
-        else
-        {
-            levelCount = 0;
-            cyclerAnother.nextScene = levelList[levelCount + 1];
-        }
-        
+        cyclerAnother.nextScene = levelList[levelCount++ % levelList.Length];
 
-        Debug.Log(nextLevel);
-        Debug.Log(ReadLevel( nextLevel));
-
-        BuildLevel(ReadLevel(nextLevel));
+        BuildLevel(nextLevel);
     }
 }
