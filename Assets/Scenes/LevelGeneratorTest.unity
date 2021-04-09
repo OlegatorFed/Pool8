@@ -648,6 +648,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Canvases
       objectReference: {fileID: 0}
+    - target: {fileID: 4989711332419324779, guid: c1ed13c1aae15e447917441e79365b40,
+        type: 3}
+      propertyPath: textFormat
+      value: '{0}:{1:00}'
+      objectReference: {fileID: 0}
     - target: {fileID: 4989711332647145661, guid: c1ed13c1aae15e447917441e79365b40,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
