@@ -29,8 +29,19 @@ public class Gameplay : MonoBehaviour
     private void Awake()
     {
         instance = this;
+    }
 
+    private void Start()
+    {
         initCameraPosition();
+    }
+
+    public void NewLevel()
+    {
+        initCameraPosition();
+
+        enabled = true;
+        coinAmount = 0;
     }
 
     // Update is called once per frame
@@ -123,6 +134,8 @@ public class Gameplay : MonoBehaviour
     public void WinAnother()
     {
         OnWinAnother?.Invoke();
+
+        enabled = false;
     }
 
     public void DiamondCollect()

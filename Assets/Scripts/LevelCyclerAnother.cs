@@ -1,11 +1,13 @@
-using System.Linq;
+using System.Collections;
+
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class LevelCyclerAnother : MonoBehaviour
 {
     public string nextScene;
     public LevelBuilder levelBuilder;
+    public Animator transitionAnimator;
+    public CueScript cue;
 
     void Start()
     {
@@ -14,7 +16,24 @@ public class LevelCyclerAnother : MonoBehaviour
 
     public void NextSceneLoad()
     {
+        StartCoroutine(Transition());
+    }
+
+    IEnumerator Transition()
+    {
+        Time.timeScale = 0f;
+        cue.enabled = false;
+        
+        transitionAnimator.SetTrigger("Transite");
+        
+        yield return new WaitForSecondsRealtime(1f);
+
+        Time.timeScale = 1f;
+        cue.enabled = true;
+        
         levelBuilder.NextLevelLoad(nextScene);
-        Gameplay.instance.coinAmount = 0;
+        Gameplay.instance.NewLevel();
+        
+        transitionAnimator.ResetTrigger("Transite");
     }
 }
