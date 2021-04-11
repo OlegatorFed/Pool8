@@ -25,18 +25,6 @@ public class CueScript : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
         lineRenderer.enabled = Input.GetMouseButton(0);
-        cueIsActive = Input.GetMouseButton(0);
-
-        if (cueIsActive)
-        {
-            Time.timeScale = 0.3f;
-            Time.fixedDeltaTime = Time.timeScale * .02f;
-        }
-        else
-        {
-            Time.timeScale = 1;
-            Time.fixedDeltaTime = Time.timeScale * .02f;
-        }
 
 
         if (plane.Raycast(ray, out hit)) 

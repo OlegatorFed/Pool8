@@ -6,7 +6,6 @@ public class LevelCyclerAnother : MonoBehaviour
 {
     public string nextScene;
     public LevelBuilder levelBuilder;
-    public Animator transitionAnimator;
     public CueScript cue;
 
     void Start()
@@ -24,16 +23,14 @@ public class LevelCyclerAnother : MonoBehaviour
         Time.timeScale = 0f;
         cue.enabled = false;
         
-        transitionAnimator.SetTrigger("Transite");
+        GlassTransition.instance.Play();
         
-        yield return new WaitForSecondsRealtime(1f);
+        yield return new WaitForSecondsRealtime(0.2f);
 
         Time.timeScale = 1f;
         cue.enabled = true;
         
         levelBuilder.NextLevelLoad(nextScene);
         Gameplay.instance.NewLevel();
-        
-        transitionAnimator.ResetTrigger("Transite");
     }
 }
