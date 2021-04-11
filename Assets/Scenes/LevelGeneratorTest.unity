@@ -821,6 +821,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Canvases
       objectReference: {fileID: 0}
+    - target: {fileID: 4989711332647145661, guid: c1ed13c1aae15e447917441e79365b40,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1799316198}
+    - target: {fileID: 4989711332647145661, guid: c1ed13c1aae15e447917441e79365b40,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: RestartLevel
+      objectReference: {fileID: 0}
     - target: {fileID: 5941767243888370086, guid: c1ed13c1aae15e447917441e79365b40,
         type: 3}
       propertyPath: m_RootOrder
@@ -1883,6 +1893,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c62a79fe955a8de4faceeb8eb45e40e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1799316198 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7088105422031733602, guid: 19ffe6c5a4e7abf458973cdc4cdd5cc0,
+    type: 3}
+  m_PrefabInstance: {fileID: 758234901}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a04cf7a5c72ae54489b4a7a90d9e7783, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &2066648641
