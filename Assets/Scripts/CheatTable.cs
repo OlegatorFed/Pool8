@@ -15,7 +15,13 @@ public class CheatTable
 			("AWAKEORFEI", Suicide),
 			("NOTAROBOT", KillAI),
 			("AMOGUS", Restart),
+			("TRANSLATE", Transition),
 		};
+	}
+
+	public void Transition()
+	{
+		GlassTransition.instance.Play();
 	}
 
 	public void Win()
